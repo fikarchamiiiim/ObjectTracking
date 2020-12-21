@@ -13,10 +13,13 @@ ap.add_argument("-t", "--tracker", type=str, default="kcf",
     help="OpenCV object tracker type")
 args = vars(ap.parse_args())
 
-ser = serial.Serial()
-ser.port = 'COM11'
-ser.baudrate = 2000000
-ser.open()
+connectSerial = False
+
+if connectSerial == True:
+    ser = serial.Serial()
+    ser.port = 'COM11'
+    ser.baudrate = 2000000
+    ser.open()
 
 # extract the OpenCV version info
 (major, minor) = cv2.__version__.split(".")[:2]
@@ -85,7 +88,8 @@ while True:
             serialOut = str(xPoint).encode("UTF-8")+b"x"+str(yPoint).encode("UTF-8")+b"y"
             # serialOut = str(yPoint).encode("UTF-8")+b"y"
 
-            ser.write(serialOut)
+            if connectSerial == True:
+                ser.write(serialOut)
             cv2.circle(frame,(xPoint, yPoint), 5, (255,0,0), -1)
 
             print(f"Center X:{xPoint}, Y:{yPoint}")
